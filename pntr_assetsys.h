@@ -48,7 +48,7 @@ extern "C" {
 #endif
 #include PNTR_ASSETSYS_ASSETSYS_H
 
-PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mount_as);
+PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
 PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
 PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path);
@@ -91,14 +91,14 @@ PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* pa
 extern "C" {
 #endif
 
-PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mount_as) {
+PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs) {
     assetsys_t* sys = assetsys_create(NULL);
     if (sys == NULL) {
         return NULL;
     }
 
-    if (path != NULL && mount_as != NULL) {
-        assetsys_mount(sys, path, mount_as);
+    if (path != NULL && mountAs != NULL) {
+        assetsys_mount(sys, path, mountAs);
     }
 
     return sys;
@@ -205,9 +205,7 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_assetsys_sound(assetsys_t* sys, const ch
         return NULL;
     }
 
-    pntr_sound* out = pntr_load_sound_from_memory(data, size);
-    PNTR_FREE(data);
-    return out;
+    return pntr_load_sound_from_memory(path, data, size);
 }
 #else
 PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* path) {

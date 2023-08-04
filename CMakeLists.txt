@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.13)
 project(pntr_assetsys
-    DESCRIPTION "pntr_assetsys: Load pntr files with assetsys."
+    DESCRIPTION "pntr_assetsys: Load pntr assets from zip files with assetsys, a file system abstraction library."
     HOMEPAGE_URL "https://github.com/robloach/pntr_assetsys"
     VERSION 0.0.1
     LANGUAGES C
