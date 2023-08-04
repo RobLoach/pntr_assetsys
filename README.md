@@ -39,4 +39,6 @@ pntr_sound* pntr_load_assetsys_sound(assetsys_t* sys, const char* path);
 
 ## License
 
-MIT
+* pntr_assetsys is [MIT](LICENSE) licensed
+* [assetsys.h](https://github.com/mattiasgustavsson/libs/blob/main/assetsys.h) by [@mattiasgustavsson](https://github.com/mattiasgustavsson) is [MIT](https://github.com/mattiasgustavsson/libs/blob/main/assetsys.h#L6416) licensed
+* [strpool.h](https://github.com/mattiasgustavsson/libs/blob/main/strpool.h) by [@mattiasgustavsson](https://github.com/mattiasgustavsson) is [MIT](https://github.com/mattiasgustavsson/libs/blob/main/strpool.h#L1260) licensed
