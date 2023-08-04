@@ -48,6 +48,16 @@ extern "C" {
 #endif
 #include PNTR_ASSETSYS_ASSETSYS_H
 
+/**
+ * Load an asset file system, and mount the given path.
+ *
+ * @param path The path to either the folder, or .zip file to mount.
+ * @param mountAs The desired mounted path, as an absolute path. For example: /res
+ *
+ * @return The assetsys_t, or NULL on failure.
+ *
+ * @see pntr_unload_assetsys()
+ */
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
 PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
@@ -72,9 +82,15 @@ PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* pa
 #ifndef PNTR_ASSETSYS_IMPLEMENTATION_ONCE
 #define PNTR_ASSETSYS_IMPLEMENTATION_ONCE
 
+// Dependency configuration
+#define ASSETSYS_MALLOC(ctx, size) (PNTR_MALLOC(size))
+#define ASSETSYS_FREE(ctx, ptr) (PNTR_FREE(ptr))
+#define MINIZ_NO_TIME
+#define MINIZ_NO_ARCHIVE_WRITING_APIS
+
 // strpool
-#define STRPOOL_MALLOC(ctx, size) (PNTR_MALLOC(size))
-#define STRPOOL_FREE(ctx, ptr) (PNTR_FREE(ptr))
+#define STRPOOL_MALLOC(ctx, size) (ASSETSYS_MALLOC(ctx, size))
+#define STRPOOL_FREE(ctx, ptr) (ASSETSYS_FREE(ctx, ptr))
 #define STRPOOL_IMPLEMENTATION
 #ifndef PNTR_ASSETSYS_STRPOOL_H
 #define PNTR_ASSETSYS_STRPOOL_H "libs/strpool.h"
@@ -82,8 +98,6 @@ PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* pa
 #include PNTR_ASSETSYS_STRPOOL_H
 
 // assetsys
-#define ASSETSYS_MALLOC(ctx, size) (PNTR_MALLOC(size))
-#define ASSETSYS_FREE(ctx, ptr) (PNTR_FREE(ptr))
 #define ASSETSYS_IMPLEMENTATION
 #include PNTR_ASSETSYS_ASSETSYS_H
 

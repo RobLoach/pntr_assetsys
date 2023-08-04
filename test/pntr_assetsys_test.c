@@ -16,6 +16,7 @@ int main() {
     printf("pntr_load_assetsys_file()\n");
     unsigned int bytesRead;
     unsigned char* text = pntr_load_assetsys_file(sys, "/res/text.txt", &bytesRead);
+    assert(text != NULL);
     assert(bytesRead > 5);
     assert(text[0] == 'H');
     assert(text[1] == 'e');
