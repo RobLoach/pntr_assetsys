@@ -54,13 +54,27 @@ extern "C" {
  * @param path The path to either the folder, or .zip file to mount.
  * @param mountAs The desired mounted path, as an absolute path. For example: /res
  *
- * @return The assetsys_t, or NULL on failure.
+ * @return The \c assetsys_t, or \c NULL on failure.
  *
  * @see pntr_unload_assetsys()
  */
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
+
+/**
+ * Load an asset .zip archive from data in memory, and mount the given path.
+ *
+ * @param data A pointer to an archive data buffer in memory.
+ * @param size The size in bytes of the data buffer.
+ * @param mountAs The desired mounted path, as an absolute path. For example: /res
+ *
+ * @return The \c assetsys_t, or \c NULL on failure.
+ *
+ * @see pntr_load_assetsys()
+ */
+PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
 PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
+PNTR_ASSETSYS_API const char* pntr_load_assetsys_file_text(assetsys_t* sys, const char* path);
 PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path);
 PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_bmf(assetsys_t* sys, const char* path, const char* characters);
 PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_tty(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
@@ -112,7 +126,26 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
     }
 
     if (path != NULL && mountAs != NULL) {
-        assetsys_mount(sys, path, mountAs);
+        if (assetsys_mount(sys, path, mountAs) != ASSETSYS_SUCCESS) {
+            assetsys_destroy(sys);
+            return NULL;
+        }
+    }
+
+    return sys;
+}
+
+PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs) {
+    assetsys_t* sys = assetsys_create(NULL);
+    if (sys == NULL) {
+        return NULL;
+    }
+
+    if (data != NULL && mountAs != NULL && size > 0) {
+        if (assetsys_mount_from_memory(sys, data, size, mountAs) != ASSETSYS_SUCCESS) {
+            assetsys_destroy(sys);
+            return NULL;
+        }
     }
 
     return sys;
@@ -161,6 +194,13 @@ PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const 
     }
 
     return out;
+}
+
+PNTR_ASSETSYS_API const char* pntr_load_assetsys_file_text(assetsys_t* sys, const char* path) {
+    unsigned int size;
+    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    data[size] = '\0';
+    return (const char*)data;
 }
 
 PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path) {
