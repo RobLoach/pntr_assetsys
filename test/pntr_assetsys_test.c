@@ -14,16 +14,16 @@ int main() {
         assetsys_t* sys = pntr_load_assetsys("resources", "/res");
         assert(sys != NULL);
 
-        printf("pntr_load_assetsys_file()\n");
+        printf("pntr_load_file_from_assetsys()\n");
         unsigned int bytesRead;
-        unsigned char* text = pntr_load_assetsys_file(sys, "/res/text.txt", &bytesRead);
+        unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/text.txt", &bytesRead);
         assert(text != NULL);
         assert(bytesRead > 5);
         assert(text[0] == 'H');
         assert(text[1] == 'e');
 
-        printf("pntr_load_assetsys_image\n");
-        pntr_image* logo = pntr_load_assetsys_image(sys, "/res/logo.png");
+        printf("pntr_load_image_from_assetsys\n");
+        pntr_image* logo = pntr_load_image_from_assetsys(sys, "/res/logo.png");
         assert(logo != NULL);
 
         pntr_unload_file(text);
@@ -56,7 +56,7 @@ int main() {
         assert(sys != NULL);
 
         unsigned int bytesRead;
-        unsigned char* text = pntr_load_assetsys_file(sys, "/res/test.txt", &bytesRead);
+        unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/test.txt", &bytesRead);
         assert(text != NULL);
         assert(bytesRead > 5);
         assert(text[0] == 'H');

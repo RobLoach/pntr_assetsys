@@ -13,7 +13,7 @@ Load [pntr](https://github.com/RobLoach/pntr) assets from zip files with [assets
 
 int main() {
     assetsys_t* sys = pntr_load_assetsys("resources.zip", "/res");
-    pntr_image* logo = pntr_load_assetsys_image(sys, "/res/logo.png");
+    pntr_image* logo = pntr_load_image_from_assetsys(sys, "/res/logo.png");
 
     // ...
 
@@ -30,12 +30,12 @@ int main() {
 assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
 void pntr_unload_assetsys(assetsys_t* sys);
-unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
-pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path);
-pntr_font* pntr_load_assetsys_font_bmf(assetsys_t* sys, const char* path, const char* characters);
-pntr_font* pntr_load_assetsys_font_tty(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
-pntr_font* pntr_load_assetsys_font_ttf(assetsys_t* sys, const char* path, int fontSize);
-pntr_sound* pntr_load_assetsys_sound(assetsys_t* sys, const char* path);
+unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead);
+pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, const char* path);
+pntr_font* pntr_load_font_bmf_from_assetsys(assetsys_t* sys, const char* path, const char* characters);
+pntr_font* pntr_load_font_tty_from_assetsys(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
+pntr_font* pntr_load_font_ttf_from_assetsys(assetsys_t* sys, const char* path, int fontSize);
+pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, const char* path);
 ```
 
 ## License

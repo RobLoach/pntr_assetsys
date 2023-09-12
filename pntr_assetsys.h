@@ -74,17 +74,15 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
 
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
-PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
-PNTR_ASSETSYS_API const char* pntr_load_assetsys_file_text(assetsys_t* sys, const char* path);
-PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path);
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_bmf(assetsys_t* sys, const char* path, const char* characters);
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_tty(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_ttf(assetsys_t* sys, const char* path, int fontSize);
+PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead);
+PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(assetsys_t* sys, const char* path);
+PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, const char* path);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_bmf_from_assetsys(assetsys_t* sys, const char* path, const char* characters);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_tty_from_assetsys(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_ttf_from_assetsys(assetsys_t* sys, const char* path, int fontSize);
 
 #ifdef PNTR_APP_API
-PNTR_ASSETSYS_API pntr_sound* pntr_load_assetsys_sound(assetsys_t* sys, const char* path);
-#else
-PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* path);
+PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, const char* path);
 #endif
 
 #ifdef __cplusplus
@@ -159,7 +157,7 @@ PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys) {
     assetsys_destroy(sys);
 }
 
-PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead) {
+PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead) {
     if (sys == NULL || path == NULL) {
         return NULL;
     }
@@ -197,16 +195,20 @@ PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const 
     return out;
 }
 
-PNTR_ASSETSYS_API const char* pntr_load_assetsys_file_text(assetsys_t* sys, const char* path) {
+PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(assetsys_t* sys, const char* path) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
+    if (data == NULL) {
+        return NULL;
+    }
+
     data[size] = '\0';
     return (const char*)data;
 }
 
-PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const char* path) {
+PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, const char* path) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
     if (data == NULL) {
         return NULL;
     }
@@ -216,9 +218,9 @@ PNTR_ASSETSYS_API pntr_image* pntr_load_assetsys_image(assetsys_t* sys, const ch
     return out;
 }
 
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_bmf(assetsys_t* sys, const char* path, const char* characters) {
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_bmf_from_assetsys(assetsys_t* sys, const char* path, const char* characters) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
     if (data == NULL) {
         return NULL;
     }
@@ -228,9 +230,9 @@ PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_bmf(assetsys_t* sys, const 
     return out;
 }
 
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_tty(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters) {
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_tty_from_assetsys(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
     if (data == NULL) {
         return NULL;
     }
@@ -240,9 +242,9 @@ PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_tty(assetsys_t* sys, const 
     return out;
 }
 
-PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_ttf(assetsys_t* sys, const char* path, int fontSize) {
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_ttf_from_assetsys(assetsys_t* sys, const char* path, int fontSize) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
     if (data == NULL) {
         return NULL;
     }
@@ -253,20 +255,14 @@ PNTR_ASSETSYS_API pntr_font* pntr_load_assetsys_font_ttf(assetsys_t* sys, const 
 }
 
 #ifdef PNTR_APP_API
-PNTR_ASSETSYS_API pntr_sound* pntr_load_assetsys_sound(assetsys_t* sys, const char* path) {
+PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, const char* path) {
     unsigned int size;
-    unsigned char* data = pntr_load_assetsys_file(sys, path, &size);
+    unsigned char* data = pntr_load_file_from_assetsys(sys, path, &size);
     if (data == NULL) {
         return NULL;
     }
 
     return pntr_load_sound_from_memory(path, data, size);
-}
-#else
-PNTR_ASSETSYS_API void* pntr_load_assetsys_sound(assetsys_t* sys, const char* path) {
-    (void)path;
-    (void)sys;
-    return NULL;
 }
 #endif
 
