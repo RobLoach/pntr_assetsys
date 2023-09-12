@@ -72,6 +72,7 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
  * @see pntr_load_assetsys()
  */
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
+
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
 PNTR_ASSETSYS_API unsigned char* pntr_load_assetsys_file(assetsys_t* sys, const char* path, unsigned int* bytesRead);
 PNTR_ASSETSYS_API const char* pntr_load_assetsys_file_text(assetsys_t* sys, const char* path);
