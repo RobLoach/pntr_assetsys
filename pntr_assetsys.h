@@ -213,7 +213,7 @@ PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, con
         return NULL;
     }
 
-    pntr_image* out = pntr_load_image_from_memory(data, size);
+    pntr_image* out = pntr_load_image_from_memory(pntr_get_file_image_type(path), data, size);
     PNTR_FREE(data);
     return out;
 }
@@ -262,7 +262,7 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, con
         return NULL;
     }
 
-    return pntr_load_sound_from_memory(path, data, size);
+    return pntr_load_sound_from_memory(pntr_app_get_file_sound_type(path), data, size);
 }
 #endif
 
