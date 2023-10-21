@@ -73,6 +73,11 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
  */
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
 
+/**
+ * Unloads the given assetsys_t.
+ *
+ * @param sys The assetsys to unload.
+ */
 PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
 PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead);
 PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(assetsys_t* sys, const char* path);
@@ -105,6 +110,11 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, con
 #define STRPOOL_MALLOC(ctx, size) (ASSETSYS_MALLOC(ctx, size))
 #define STRPOOL_FREE(ctx, ptr) (ASSETSYS_FREE(ctx, ptr))
 #define STRPOOL_IMPLEMENTATION
+#define STRPOOL_ASSERT(condition, message) ((void)0)
+#define STRPOOL_MEMSET(ptr, val, cnt) (PNTR_MEMSET(ptr, val, cnt))
+#define STRPOOL_MEMCPY(dst, src, cnt) (PNTR_MEMCPY(dst, src, cnt))
+//#define STRPOOL_MEMCMP( pr1, pr2, cnt ) ( my_memcmp_func( pr1, pr2, cnt ) )
+//#define STRPOOL_STRNICMP( s1, s2, len ) ( my_strnicmp_func( s1, s2, len ) )
 #ifndef PNTR_ASSETSYS_STRPOOL_H
 #define PNTR_ASSETSYS_STRPOOL_H "libs/strpool.h"
 #endif  // PNTR_ASSETSYS_STRPOOL_H

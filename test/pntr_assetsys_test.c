@@ -66,5 +66,7 @@ int main() {
         pntr_unload_assetsys(sys);
     }
 
+    printf("pntr_assetsys_test: Tests passed");
+
     return 0;
 }
