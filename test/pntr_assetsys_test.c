@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <assert.h>
+#include <string.h>
 
 #define PNTR_DISABLE_MATH
 #define PNTR_IMPLEMENTATION
@@ -19,8 +20,7 @@ int main() {
         unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/text.txt", &bytesRead);
         assert(text != NULL);
         assert(bytesRead > 5);
-        assert(text[0] == 'H');
-        assert(text[1] == 'e');
+        assert(strcmp(text, "Hello, World!\n") == 0);
 
         printf("pntr_load_image_from_assetsys\n");
         pntr_image* logo = pntr_load_image_from_assetsys(sys, "/res/logo.png");
@@ -59,8 +59,7 @@ int main() {
         unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/test.txt", &bytesRead);
         assert(text != NULL);
         assert(bytesRead > 5);
-        assert(text[0] == 'H');
-        assert(text[1] == 'e');
+        assert(strcmp(text, "Hello, World!\n") == 0);
 
         pntr_unload_file(text);
         pntr_unload_assetsys(sys);

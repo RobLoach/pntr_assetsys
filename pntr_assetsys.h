@@ -43,10 +43,8 @@ extern "C" {
     #define PNTR_ASSETSYS_API PNTR_API
 #endif
 
-#ifndef PNTR_ASSETSYS_ASSETSYS_H
-#define PNTR_ASSETSYS_ASSETSYS_H "libs/assetsys.h"
-#endif
-#include PNTR_ASSETSYS_ASSETSYS_H
+// Assetsys initial struct definition
+struct assetsys_t;
 
 /**
  * Load an asset file system, and mount the given path.
@@ -58,7 +56,7 @@ extern "C" {
  *
  * @see pntr_unload_assetsys()
  */
-PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
+PNTR_ASSETSYS_API struct assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 
 /**
  * Load an asset .zip archive from data in memory, and mount the given path.
@@ -71,20 +69,20 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
  *
  * @see pntr_load_assetsys()
  */
-PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
+PNTR_ASSETSYS_API struct assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
 
 /**
  * Unloads the given assetsys_t.
  *
  * @param sys The assetsys to unload.
  */
-PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys);
-PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead);
-PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(assetsys_t* sys, const char* path);
-PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, const char* path);
-PNTR_ASSETSYS_API pntr_font* pntr_load_font_bmf_from_assetsys(assetsys_t* sys, const char* path, const char* characters);
-PNTR_ASSETSYS_API pntr_font* pntr_load_font_tty_from_assetsys(assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
-PNTR_ASSETSYS_API pntr_font* pntr_load_font_ttf_from_assetsys(assetsys_t* sys, const char* path, int fontSize);
+PNTR_ASSETSYS_API void pntr_unload_assetsys(struct assetsys_t* sys);
+PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(struct assetsys_t* sys, const char* path, unsigned int* bytesRead);
+PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(struct assetsys_t* sys, const char* path);
+PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(struct assetsys_t* sys, const char* path);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_bmf_from_assetsys(struct assetsys_t* sys, const char* path, const char* characters);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_tty_from_assetsys(struct assetsys_t* sys, const char* path, int glyphWidth, int glyphHeight, const char* characters);
+PNTR_ASSETSYS_API pntr_font* pntr_load_font_ttf_from_assetsys(struct assetsys_t* sys, const char* path, int fontSize);
 
 #ifdef PNTR_APP_API
 PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, const char* path);
@@ -115,6 +113,7 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, con
 #define STRPOOL_MEMCPY(dst, src, cnt) (PNTR_MEMCPY(dst, src, cnt))
 //#define STRPOOL_MEMCMP( pr1, pr2, cnt ) ( my_memcmp_func( pr1, pr2, cnt ) )
 //#define STRPOOL_STRNICMP( s1, s2, len ) ( my_strnicmp_func( s1, s2, len ) )
+
 #ifndef PNTR_ASSETSYS_STRPOOL_H
 #define PNTR_ASSETSYS_STRPOOL_H "libs/strpool.h"
 #endif  // PNTR_ASSETSYS_STRPOOL_H
@@ -122,6 +121,10 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, con
 
 // assetsys
 #define ASSETSYS_IMPLEMENTATION
+#ifndef PNTR_ASSETSYS_ASSETSYS_H
+#define PNTR_ASSETSYS_ASSETSYS_H "libs/assetsys.h"
+#endif  // PNTR_ASSETSYS_ASSETSYS_H
+
 #include PNTR_ASSETSYS_ASSETSYS_H
 
 #ifdef __cplusplus
