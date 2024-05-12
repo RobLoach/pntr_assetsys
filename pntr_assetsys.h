@@ -43,8 +43,9 @@ extern "C" {
     #define PNTR_ASSETSYS_API PNTR_API
 #endif
 
-// Assetsys initial struct definition
-struct assetsys_t;
+#ifndef PNTR_ASSETSYS_ASSETSYS_H
+#define PNTR_ASSETSYS_ASSETSYS_H "libs/assetsys.h"
+#endif  // PNTR_ASSETSYS_ASSETSYS_H
 
 /**
  * Load an asset file system, and mount the given path.
@@ -77,6 +78,16 @@ PNTR_ASSETSYS_API struct assetsys_t* pntr_load_assetsys_from_memory(const void* 
  * @param sys The assetsys to unload.
  */
 PNTR_ASSETSYS_API void pntr_unload_assetsys(struct assetsys_t* sys);
+
+/**
+ * Load a file from the given assetsys_t.
+ *
+ * @param sys The assetsys to load the file from.
+ * @param path The path to the file to load.
+ * @param bytesRead Output variable for the number of bytes read from the file.
+ *
+ * @return The file data, or \c NULL on failure.
+ */
 PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(struct assetsys_t* sys, const char* path, unsigned int* bytesRead);
 PNTR_ASSETSYS_API const char* pntr_load_file_text_from_assetsys(struct assetsys_t* sys, const char* path);
 PNTR_ASSETSYS_API pntr_image* pntr_load_image_from_assetsys(struct assetsys_t* sys, const char* path);
@@ -101,7 +112,9 @@ PNTR_ASSETSYS_API pntr_sound* pntr_load_sound_from_assetsys(assetsys_t* sys, con
 // Dependency configuration
 #define ASSETSYS_MALLOC(ctx, size) (PNTR_MALLOC(size))
 #define ASSETSYS_FREE(ctx, ptr) (PNTR_FREE(ptr))
+#define ASSETSYS_ASSERT(condition, message) ((void)0)
 #define MINIZ_NO_TIME
+#define MINIZ_NO_STDIO
 #define MINIZ_NO_ARCHIVE_WRITING_APIS
 
 // strpool

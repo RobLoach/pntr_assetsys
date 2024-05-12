@@ -1,10 +1,10 @@
 #include <stdio.h>
-#include <assert.h>
 #include <string.h>
 
 #define PNTR_DISABLE_MATH
 #define PNTR_IMPLEMENTATION
 #include "pntr.h"
+#include "pntr_assert.h"
 
 #define PNTR_ASSETSYS_IMPLEMENTATION
 #include "pntr_assetsys.h"
@@ -13,19 +13,23 @@ int main() {
     printf("pntr_load_assetsys()\n");
     {
         assetsys_t* sys = pntr_load_assetsys("resources", "/res");
-        assert(sys != NULL);
+        pntr_assert(sys != NULL);
 
         printf("pntr_load_file_from_assetsys()\n");
         unsigned int bytesRead;
         unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/text.txt", &bytesRead);
-        assert(text != NULL);
-        assert(bytesRead > 5);
-        assert(strcmp(text, "Hello, World!\n") == 0);
+        pntr_assert(text != NULL);
+        pntr_assert(bytesRead > 5);
+        pntr_assert(strcmp(text, "Hello, World!\n") == 0);
 
         printf("pntr_load_image_from_assetsys\n");
         pntr_image* logo = pntr_load_image_from_assetsys(sys, "/res/logo.png");
-        assert(logo != NULL);
+        pntr_assert(logo != NULL);
 
+        pntr_image* other = pntr_load_image("resources/logo.png");
+        PNTR_ASSERT_IMAGE_EQUALS(logo, other);
+
+        pntr_unload_image(other);
         pntr_unload_file(text);
         pntr_unload_image(logo);
 
@@ -53,13 +57,13 @@ int main() {
 
         // Load the memory as a .zip file
         assetsys_t* sys = pntr_load_assetsys_from_memory(data, data_size, "/res");
-        assert(sys != NULL);
+        pntr_assert(sys != NULL);
 
-        unsigned int bytesRead;
+        unsigned int bytesRead = 0;
         unsigned char* text = pntr_load_file_from_assetsys(sys, "/res/test.txt", &bytesRead);
-        assert(text != NULL);
-        assert(bytesRead > 5);
-        assert(strcmp(text, "Hello, World!\n") == 0);
+        pntr_assert(text != NULL);
+        pntr_assert(bytesRead > 5);
+        pntr_assert(strcmp(text, "Hello, World!\n") == 0);
 
         pntr_unload_file(text);
         pntr_unload_assetsys(sys);

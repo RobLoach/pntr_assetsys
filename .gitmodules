@@ -3,4 +3,3 @@
 	url = https://github.com/mattiasgustavsson/libs.git
 	branch = main
 	ignore = dirty
-	shallow = true
