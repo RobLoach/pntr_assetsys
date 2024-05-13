@@ -29,6 +29,7 @@ int main() {
 ``` c
 assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs);
+bool pntr_assetsys_mount(assetsys_t* sys, const char* path, const char* mountAs);
 void pntr_unload_assetsys(assetsys_t* sys);
 unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead);
 pntr_image* pntr_load_image_from_assetsys(assetsys_t* sys, const char* path);
