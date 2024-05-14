@@ -60,6 +60,17 @@ extern "C" {
 PNTR_ASSETSYS_API struct assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs);
 
 /**
+ * Mount the given path to the given assetsys_t.
+ *
+ * @param sys The assetsys to mount the path to.
+ * @param path The path to either the folder, or .zip file to mount.
+ * @param mountAs The desired mounted path, as an absolute path. For example: /res
+ *
+ * @return \c true if the path was mounted successfully, \c false otherwise.
+ */
+PNTR_ASSETSYS_API bool pntr_assetsys_mount(struct assetsys_t* sys, const char* path, const char* mountAs);
+
+/**
  * Load an asset .zip archive from data in memory, and mount the given path.
  *
  * @param data A pointer to an archive data buffer in memory.
@@ -151,13 +162,30 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
     }
 
     if (path != NULL && mountAs != NULL) {
-        if (assetsys_mount(sys, path, mountAs) != ASSETSYS_SUCCESS) {
+        if (!pntr_assetsys_mount(sys, path, mountAs)) {
             assetsys_destroy(sys);
             return NULL;
         }
     }
 
     return sys;
+}
+
+PNTR_ASSETSYS_API bool pntr_assetsys_mount(assetsys_t* sys, const char* path, const char* mountAs) {
+    if (sys == NULL || path == NULL || mountAs == NULL) {
+        return false;
+    }
+
+    // Attempt to load the file through pntr, prefering using pntr_load_file().
+    unsigned int bytesRead;
+    unsigned char* data = pntr_load_file(path, &bytesRead);
+    if (data != NULL) {
+        assetsys_error_t result = assetsys_mount_from_memory(sys, data, bytesRead, mountAs);
+        pntr_unload_file(data);
+        return result;
+    }
+
+    return assetsys_mount(sys, path, mountAs) == ASSETSYS_SUCCESS;
 }
 
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs) {
