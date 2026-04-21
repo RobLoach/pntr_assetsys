@@ -158,7 +158,7 @@ extern "C" {
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* mountAs) {
     assetsys_t* sys = assetsys_create(NULL);
     if (sys == NULL) {
-        return NULL;
+        return (assetsys_t*)pntr_set_error(PNTR_ERROR_NO_MEMORY);
     }
 
     if (path != NULL && mountAs != NULL) {
@@ -173,6 +173,7 @@ PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys(char const* path, char const* m
 
 PNTR_ASSETSYS_API bool pntr_assetsys_mount(assetsys_t* sys, const char* path, const char* mountAs) {
     if (sys == NULL || path == NULL || mountAs == NULL) {
+        pntr_set_error(PNTR_ERROR_INVALID_ARGS);
         return false;
     }
 
@@ -182,22 +183,30 @@ PNTR_ASSETSYS_API bool pntr_assetsys_mount(assetsys_t* sys, const char* path, co
     if (data != NULL) {
         assetsys_error_t result = assetsys_mount_from_memory(sys, data, bytesRead, mountAs);
         pntr_unload_file(data);
-        return result;
+        if (result != ASSETSYS_SUCCESS) {
+            pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
+            return false;
+        }
+        return true;
     }
 
-    return assetsys_mount(sys, path, mountAs) == ASSETSYS_SUCCESS;
+    if (assetsys_mount(sys, path, mountAs) != ASSETSYS_SUCCESS) {
+        pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
+        return false;
+    }
+    return true;
 }
 
 PNTR_ASSETSYS_API assetsys_t* pntr_load_assetsys_from_memory(const void* data, size_t size, char const* mountAs) {
     assetsys_t* sys = assetsys_create(NULL);
     if (sys == NULL) {
-        return NULL;
+        return (assetsys_t*)pntr_set_error(PNTR_ERROR_NO_MEMORY);
     }
 
     if (data != NULL && mountAs != NULL && size > 0) {
         if (assetsys_mount_from_memory(sys, data, size, mountAs) != ASSETSYS_SUCCESS) {
             assetsys_destroy(sys);
-            return NULL;
+            return (assetsys_t*)pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
         }
     }
 
@@ -213,32 +222,32 @@ PNTR_ASSETSYS_API void pntr_unload_assetsys(assetsys_t* sys) {
 
 PNTR_ASSETSYS_API unsigned char* pntr_load_file_from_assetsys(assetsys_t* sys, const char* path, unsigned int* bytesRead) {
     if (sys == NULL || path == NULL) {
-        return NULL;
+        return pntr_set_error(PNTR_ERROR_INVALID_ARGS);
     }
 
     // Load the file information from assetsys.
     assetsys_file_t file;
     if (assetsys_file(sys, path, &file) != 0) {
-        return NULL;
+        return pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
     }
 
     // Find out the size of the file.
     int size = assetsys_file_size(sys, file);
     if (size <= 0) {
-        return NULL;
+        return pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
     }
 
     // Create the memory buffer.
     unsigned char* out = PNTR_MALLOC(size + 1);
     if (out == NULL) {
-        return NULL;
+        return pntr_set_error(PNTR_ERROR_NO_MEMORY);
     }
 
     // Load the file into the buffer.
     int outSize = 0;
     if (assetsys_file_load(sys, file, &outSize, (void*)out, size) != 0) {
         PNTR_FREE(out);
-        return NULL;
+        return pntr_set_error(PNTR_ERROR_FAILED_TO_OPEN);
     }
 
     // Save how many bytes were read.
